@@ -1,0 +1,65 @@
+name: CI
+
+on: [push]
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout step
+      uses: actions/checkout@v2
+    - name: Start Docker Containers
+      run: | 
+        docker-compose up -d
+    - name: Composer step
+      run: docker exec php-fpm composer install  
+    - name: Configure Site
+      run: |
+        chmod -R 777 storage
+        cp .env.docker .env
+        docker exec php-fpm php artisan key:generate
+    - name: Include Node
+      uses: actions/setup-node@v2
+      with:
+        node-version: '16'
+    - name: Wait for mysql 
+      run: | 
+        echo 'pausing: waiting for mysql to come available'
+        ./docker/config/mysql/.wait-for-mysql.sh
+        echo 'un-pausing: mysql is now available' 
+    - name: Create Database
+      run: |
+        docker exec php-fpm php artisan migrate:install
+        docker exec php-fpm php artisan migrate
+        docker exec php-fpm php artisan db:seed
+    - name: PHP Test Step
+      run: docker exec php-fpm php artisan test --parallel
+    - name: Check unit test coverage
+      id: test-coverage
+      uses: johanvanhelden/gha-clover-test-coverage-check@v1
+      with:
+        percentage: "60"
+        rounded-precision: 2
+        exit: false
+        filename: tests/reports/coverage_clover.xml
+    - name: Add coverage comment
+      uses: mshick/add-pr-comment@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        message: |
+          Coverage: ${{ steps.test-coverage.outputs.coverage }}
+        allow-repeats: false
+    - name: Upload Code Coverage
+      uses: actions/upload-artifact@v2
+      with:
+        name: code coverage report
+        path: tests/reports/coverage_clover.xml
+    - name: Upload Dusk Screenshots and Console
+      if: failure()
+      uses: actions/upload-artifact@v2
+      with:
+        name: dusk
+        path: |
+          tests/Browser/screenshots
+          tests/Browser/console
