@@ -12,12 +12,12 @@ jobs:
       run: | 
         docker-compose up -d
     - name: Composer step
-      run: docker exec php-fpm composer install  
+      run: docker exec demo-php-fpm composer install  
     - name: Configure Site
       run: |
         chmod -R 777 storage
         cp .env.docker .env
-        docker exec php-fpm php artisan key:generate
+        docker exec demo-php-fpm php artisan key:generate
     - name: Include Node
       uses: actions/setup-node@v2
       with:
@@ -29,11 +29,11 @@ jobs:
         echo 'un-pausing: mysql is now available' 
     - name: Create Database
       run: |
-        docker exec php-fpm php artisan migrate:install
-        docker exec php-fpm php artisan migrate
-        docker exec php-fpm php artisan db:seed
+        docker exec demo-php-fpm php artisan migrate:install
+        docker exec demo-php-fpm php artisan migrate
+        docker exec demo-php-fpm php artisan db:seed
     - name: PHP Test Step
-      run: docker exec php-fpm php artisan test --parallel
+      run: docker exec demo-php-fpm php artisan test --parallel
     - name: Check unit test coverage
       id: test-coverage
       uses: johanvanhelden/gha-clover-test-coverage-check@v1
@@ -55,11 +55,3 @@ jobs:
       with:
         name: code coverage report
         path: tests/reports/coverage_clover.xml
-    - name: Upload Dusk Screenshots and Console
-      if: failure()
-      uses: actions/upload-artifact@v2
-      with:
-        name: dusk
-        path: |
-          tests/Browser/screenshots
-          tests/Browser/console

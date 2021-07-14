@@ -12,13 +12,19 @@
             <directory suffix="Test.php">./tests/Feature</directory>
         </testsuite>
     </testsuites>
+    
     <coverage processUncoveredFiles="true">
         <include>
             <directory suffix=".php">./app</directory>
         </include>
+        <report>
+            <clover outputFile="./tests/reports/coverage_clover.xml"/>
+        </report>
     </coverage>
+    
     <php>
         <server name="APP_ENV" value="testing"/>
+        <server name="APP_KEY" value="base64:yal8lItyCPGhndfLi9K4YrxaMkrUAGqcA1IS8RY9tMs="/>
         <server name="BCRYPT_ROUNDS" value="4"/>
         <server name="CACHE_DRIVER" value="array"/>
         <server name="MAIL_MAILER" value="array"/>

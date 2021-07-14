@@ -10,20 +10,20 @@
    * **Note**: On first run, this will pull down the initial images required   
 
 3. Install package dependencies
-   * docker compose exec php-fpm composer install
+   * docker compose exec demo-php-fpm composer install
    * docker run -it --rm -v "$PWD":/app -w "/app" node:latest npm install
 
 4. Configure site
    * cp .env.docker .env
-   * docker compose exec php-fpm php artisan key:generate
+   * docker compose exec demo-php-fpm php artisan key:generate
    * Add the following line to /etc/hosts, to create an alias to the site:
        * `127.0.0.1        env.test`
    * docker run -it --rm -v "$PWD":/app -w "/app" node:latest npm run dev
 
 5. Create Database
-   * docker compose exec php-fpm php artisan migrate:install
-   * docker compose exec php-fpm php artisan migrate
-   * docker compose exec php-fpm php artisan db:seed
+   * docker compose exec demo-php-fpm php artisan migrate:install
+   * docker compose exec demo-php-fpm php artisan migrate
+   * docker compose exec demo-php-fpm php artisan db:seed
 
 **Notes**
  - Uses PHP v8
@@ -39,18 +39,20 @@
 3. Using the containers
    * The code can be edited in an ide, the directory is mapped into the php and nginx directories
      * http://env.test:8881
+      * email: user@example.com
+      * password: password
    * Run the php unit tests
-      * docker compose exec php-fpm php artisan test --parallel
+      * docker compose exec demo-php-fpm php artisan test --parallel
    * Run the vue/jest tests
       * docker run -it --rm -v "$PWD":/app -w "/app" node:latest npm run test
 
    * Access the db via cli
-      * docker compose exec mysql mysql -u demo_usr -pdemo_pw demo_dev
+      * docker compose exec demo-mysql mysql -u demo_usr -pdemo_pw demo_dev
       * The db volume is mapped to ./docker/volumes/mysql so it persists
    * Interacting with npm
       * docker run -it --rm -v "$PWD":/app -w "/app" node:latest {command here}
    * Interacting with artisan
-     * docker compose exec php-fpm php artisan {command here}
+     * docker compose exec demo-php-fpm php artisan {command here}
 
 4. Stop the running containers
    * docker compose down --remove-orphans
