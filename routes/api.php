@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DataController;
 use App\Http\Controllers\LoginController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -15,4 +16,4 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('test', [LoginController::class, 'test'])->name('test')->middleware('auth:sanctum');
+Route::get('data', [DataController::class, 'index'])->name('index')->middleware('auth:sanctum');

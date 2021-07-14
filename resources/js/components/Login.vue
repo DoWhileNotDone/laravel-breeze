@@ -40,7 +40,7 @@
         });
       },
       getSecrets() {
-        axios.get('/api/test').then(response => this.secrets = response.data);
+        axios.get('/api/data').then(response => this.secrets = response.data);
       }
     }    
   }

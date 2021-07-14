@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
@@ -26,23 +25,5 @@ class LoginController extends Controller
         } else {
             abort(401);
         }
-    }
-
-    /**
-     * Handle an authentication attempt.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function test(Request $request)
-    {
-        return [
-            [
-                'name' => 'one'
-            ],
-            [
-                'name' => 'three'
-            ]
-        ];
     }
 }
