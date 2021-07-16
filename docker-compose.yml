@@ -18,7 +18,7 @@ services:
       context: .
       dockerfile: ./docker/dockerfiles/php-fpm/Dockerfile
       target: develop
-    image: dowhilenotdone/demo-php-fpm:latest
+    image: davegthemighty/demo-php-fpm:latest
     container_name: demo-php-fpm
     restart: unless-stopped
     tty: true
@@ -32,7 +32,7 @@ services:
       context: .
       dockerfile: ./docker/dockerfiles/mysql/Dockerfile
       target: develop
-    image: dowhilenotdone/demo-mysql:latest
+    image: davegthemighty/demo-mysql:latest
     container_name: demo-mysql
     restart: unless-stopped
     tty: true
@@ -48,9 +48,3 @@ services:
       - MYSQL_USER=demo_usr
       - MYSQL_PASSWORD=demo_pw
 
-  selenium:
-    container_name: selenium
-    image: selenium/standalone-chrome-debug:latest
-    ports:
-      - 4444:4444    
-    shm_size: '2gb'

@@ -4,8 +4,9 @@ Uses Laravel 8, vue 2, and laravel sanctum.
 
 ## Local Installation with Docker ##
 
-1. Build the docker images
+1. Optional - Build the docker images
    * docker compose build
+   * **Note**: The images are available on docker
 
 2. Start the docker containers
    * docker compose up
