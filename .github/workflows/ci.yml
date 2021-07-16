@@ -8,6 +8,10 @@ jobs:
     steps:
     - name: Checkout step
       uses: actions/checkout@v2
+    - name: Pull docker images
+      run: |
+        docker pull davegthemighty/demo-php-fpm:latest
+        docker pull davegthemighty/demo-mysql:latest
     - name: Start Docker Containers
       run: | 
         docker-compose up -d
