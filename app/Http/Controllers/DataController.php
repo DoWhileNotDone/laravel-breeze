@@ -20,8 +20,20 @@ class DataController extends Controller
                 'name' => 'one'
             ],
             [
+                'name' => 'two'
+            ],
+            [
                 'name' => 'three'
-            ]
+            ],
+            [
+                'name' => 'four'
+            ],
+            [
+                'name' => 'five'
+            ],
+            [
+                'name' => 'six'
+            ],
         ];
     }
 }
