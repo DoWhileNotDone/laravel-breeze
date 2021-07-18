@@ -41,19 +41,18 @@
         }
     },
     methods: {
-      handleLogin() {
+      async handleLogin() {
         this.submitted = true
         this.not_recognised = false
-        axios.get('/sanctum/csrf-cookie').then(response => {
-          axios.post('/login', this.formData).then(response => {
-            this.$emit('user_authorised');
-          }).catch(error => {
-            // credentials didn't match
+        try {
+          await axios.get('/sanctum/csrf-cookie')
+          await axios.post('/login', this.formData)
+          this.$emit('user_authorised');
+        } catch (error) {
             this.submitted = false
             this.not_recognised = true
             console.log(error)
-          });
-        });
+        }
       },
     }    
   }

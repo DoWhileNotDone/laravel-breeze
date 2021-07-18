@@ -45,8 +45,9 @@
       },
     },
     methods: {
-      getData() {
-        axios.get('/api/data').then(({ data }) => this.data = data);
+      async getData() {
+        const { data } = await axios.get('/api/data')
+        this.data = data
       }
     }    
   }
