@@ -11,7 +11,7 @@ describe('App.vue', () => {
   it('Renders', () => {
 
     const wrapper = mount(App);    
-    expect(wrapper.text()).toContain("Hello World")
+    expect(wrapper.text()).toContain("Password")
 
   });
   

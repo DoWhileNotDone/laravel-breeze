@@ -26,6 +26,10 @@ jobs:
       uses: actions/setup-node@v2
       with:
         node-version: '16'
+    - name: Create Test Assets
+      run: |
+        npm install
+        npm run dev
     - name: Wait for mysql 
       run: | 
         echo 'pausing: waiting for mysql to come available'
@@ -38,6 +42,17 @@ jobs:
         docker exec demo-php-fpm php artisan db:seed
     - name: PHP Test Step
       run: docker exec demo-php-fpm php artisan test --parallel
+    - name: Jest Test Step
+      if: ${{ always() }}
+      run: npm run test
+    - name: Run Dusk Tests
+      if: ${{ success() }}
+      run: |
+        docker exec demo-php-fpm php artisan dusk
+    - name: Create Production Assets
+      if: ${{ success() }}
+      run: |
+        npm run prod
     - name: Check unit test coverage
       id: test-coverage
       uses: johanvanhelden/gha-clover-test-coverage-check@v1
@@ -59,3 +74,20 @@ jobs:
       with:
         name: code coverage report
         path: tests/reports/coverage_clover.xml
+    - name: Upload Assets
+      if: ${{ success() }}
+      uses: actions/upload-artifact@v2
+      with:
+        name: assets
+        path: |
+          public/css/app.css
+          public/js/app.js
+          public/js/app.js.LICENSE.txt
+    - name: Upload Dusk Screenshots and Console
+      if: failure()
+      uses: actions/upload-artifact@v2
+      with:
+        name: dusk
+        path: |
+          tests/Browser/screenshots
+          tests/Browser/console
