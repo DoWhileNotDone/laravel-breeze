@@ -8,5 +8,8 @@ module.exports = async () => {
       "^.+\\.vue$": "vue-jest",
     },
     transformIgnorePatterns: ['/node_modules/'],
+    collectCoverage: true,
+    coverageReporters: ["clover"],
+    coverageDirectory: "<rootDir>/coverage/js",    
   }
 };

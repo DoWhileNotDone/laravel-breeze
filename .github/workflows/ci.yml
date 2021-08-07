@@ -21,6 +21,7 @@ jobs:
       run: |
         chmod -R 777 storage
         cp .env.docker .env
+        mkdir -m 777 coverage
         docker exec demo-php-fpm php artisan key:generate
     - name: Include Node
       uses: actions/setup-node@v2
@@ -53,27 +54,43 @@ jobs:
       if: ${{ success() }}
       run: |
         npm run prod
-    - name: Check unit test coverage
-      id: test-coverage
+    - name: Check php unit test coverage
+      id: test-php-coverage
       uses: johanvanhelden/gha-clover-test-coverage-check@v1
       with:
         percentage: "60"
         rounded-precision: 2
         exit: false
-        filename: tests/reports/coverage_clover.xml
-    - name: Add coverage comment
+        filename: coverage/php/clover.xml
+    - name: Add php coverage comment
       uses: mshick/add-pr-comment@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         message: |
-          Coverage: ${{ steps.test-coverage.outputs.coverage }}
+          Coverage: ${{ steps.test-php-coverage.outputs.coverage }}
+        allow-repeats: false
+    - name: Check js test coverage
+      id: test-js-coverage
+      uses: johanvanhelden/gha-clover-test-coverage-check@v1
+      with:
+        percentage: "60"
+        rounded-precision: 2
+        exit: false
+        filename: coverage/js/clover.xml
+    - name: Add js coverage comment
+      uses: mshick/add-pr-comment@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        message: |
+          Javascript Coverage: ${{ steps.test-js-coverage.outputs.coverage }}
         allow-repeats: false
     - name: Upload Code Coverage
       uses: actions/upload-artifact@v2
       with:
         name: code coverage report
-        path: tests/reports/coverage_clover.xml
+        path: coverage
     - name: Upload Assets
       if: ${{ success() }}
       uses: actions/upload-artifact@v2
