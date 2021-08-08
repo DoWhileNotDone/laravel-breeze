@@ -109,11 +109,25 @@ jobs:
         message: |
           Javascript Coverage: ${{ steps.test-js-coverage.outputs.coverage }}
         allow-repeats: false
+    - name: Testy
+      run: |
+        ls -al coverage/php
+        ls -al /home/runner/work/laravel-vue-spa/laravel-vue-spa/coverage/php/
+    - name: Test & publish code coverage
+      uses: paambaati/codeclimate-action@v2.7.5
+      env:
+        CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+      with:
+        coverageLocations: |
+          coverage/js/clover.xml:clover
+          coverage/php/clover.xml:clover          
+        debug: true
+        prefix: /var/www/
     - name: Upload Code Coverage
       uses: actions/upload-artifact@v2
       with:
         name: code coverage report
-        path: coverage
+        path: coverage        
     - name: Upload Assets
       if: ${{ success() }}
       uses: actions/upload-artifact@v2
